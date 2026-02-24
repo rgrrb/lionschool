@@ -7,9 +7,12 @@ function criarMain() {
 
     main.replaceChildren()
 
-
-    main.append(criarLeftContent(), criarEstudante(), criarRightContent())
-
+    const home = document.createElement('div')
+    home.classList.add("home")
+    home.append(criarLeftContent(), criarEstudante(), criarRightContent())
+    main.appendChild(home)
+    
+    main.style.flexDirection = "column"
 }
 function criarLeftContent() {
 
@@ -115,9 +118,12 @@ async function criarAlunosRede() {
 
     main.replaceChildren()
 
+    const titulo = document.createElement("h1")
+    titulo.classList.add("titulo-curso")
+    titulo.textContent = "Redes"
+
     const listagemAlunos = document.createElement("div")
     listagemAlunos.classList.add("students-list")
-
 
 
     dados.forEach(aluno => {
@@ -126,8 +132,7 @@ async function criarAlunosRede() {
         listagemAlunos.append(cards)
     })
 
-
-    main.append(listagemAlunos)
+    main.append(titulo, listagemAlunos)
 
 }
 async function criarAlunosDesenvolvimento() {
@@ -136,6 +141,10 @@ async function criarAlunosDesenvolvimento() {
     const dados = await resposta.json();
 
     main.replaceChildren()
+
+    const titulo = document.createElement("h1")
+    titulo.classList.add("titulo-curso")
+    titulo.textContent = "Desenvolvimento de Sistemas"
 
     const listagemAlunos = document.createElement("div")
     listagemAlunos.classList.add("students-list")
@@ -150,12 +159,10 @@ async function criarAlunosDesenvolvimento() {
     })
 
 
-    main.append(listagemAlunos)
+    main.append(titulo, listagemAlunos)
 }
 
 async function criarInformacoesDoAluno(id) {
-    console.log(id)
-
     const resposta = await fetch(`https://lion-school-backend.onrender.com/alunos/${id}`);
     const dados = await resposta.json();
 
@@ -175,27 +182,44 @@ async function criarInformacoesDoAluno(id) {
     const studentStatistics = document.createElement("div")
     studentStatistics.classList.add("student-statistics")
 
-    const infoMateria = document.createElement("div")
-    infoMateria.classList.add("info-materia")
-    const porcentagem = document.createElement("span")    
-    porcentagem.textContent = dados.valor
-
-    const nomeMateria = document.createElement("span")
-    nomeMateria.textContent = dados.categoria
 
     dados.desempenho.forEach(info => {
-        const barra = document.createElement("div")
-        barra.classList.add("barra")
-        barra.style.height = `calc(${info.valor}px * 4)`
-        infoMateria.append(porcentagem, barra, nomeMateria)
+
+        const performance = document.createElement("div")
+        performance.classList.add("performance")
+
+        const porcentagem = document.createElement("span")    
+        porcentagem.textContent = info.valor
+    
+        const nomeMateria = document.createElement("span")
+        nomeMateria.textContent = info.categoria
+
+        const bar = document.createElement("div")
+        bar.classList.add("bar")
+
+        const fill = document.createElement("div")
+        fill.classList.add("fill")
+        fill.style.height = `${info.valor}%`
+
+        if(info.valor <= 4){
+            fill.style.backgroundColor = "red"
+            porcentagem.style.color = "red"
+        }else if (info.valor >= 5 && info.valor < 7){
+            fill.style.backgroundColor = "yellow"
+            porcentagem.style.color = "yellow"
+        }else{
+            fill.style.backgroundColor = "#3347B0"
+            porcentagem.style.color = "#3347B0"
+        }
+
+        bar.appendChild(fill)
+
+        performance.append(porcentagem, bar, nomeMateria)
+        studentStatistics.appendChild(performance)
     })
-
-
-
-
-    studentStatistics.append(infoMateria)
-
+   
     main.style.gap = '200px'
+    main.style.flexDirection = "row"
 
     main.append(infoAluno, studentStatistics)
 }

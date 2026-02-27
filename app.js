@@ -3,7 +3,7 @@
 import { fetchAlunosByCourse, fetchAluno } from "./src/js/api.js";
 
 const main = document.getElementById("main")
-
+const header = document.getElementById("header")
 
 function criarMain() {
 
@@ -121,16 +121,14 @@ async function criarAlunosRede() {
     main.style.flexDirection = "column"
     main.style.gap = '0px'
 
-    displayButtonExit()
-
     const titulo = document.createElement("h1")
     titulo.classList.add("titulo-curso")
     titulo.textContent = "Redes"
 
+    buttonSair()
+
     const listagemAlunos = document.createElement("div")
     listagemAlunos.classList.add("students-list")
-
-    buttonExit()
 
     dados.forEach(aluno => {
         const cards = criarCards(aluno.foto, aluno.nome)
@@ -149,16 +147,14 @@ async function criarAlunosDesenvolvimento() {
     main.style.flexDirection = "column"
     main.style.gap = '0px'
 
-    displayButtonExit()
-
     const titulo = document.createElement("h1")
     titulo.classList.add("titulo-curso")
     titulo.textContent = "Desenvolvimento de Sistemas"
 
+    buttonSair()
+
     const listagemAlunos = document.createElement("div")
     listagemAlunos.classList.add("students-list")
-
-    buttonExit()
 
     dados.forEach(aluno => {
         const cards = criarCards(aluno.foto, aluno.nome)
@@ -173,8 +169,6 @@ async function criarAlunosDesenvolvimento() {
 async function criarInformacoesDoAluno(id) {
 
     main.style.flexDirection = "row"
-
-    displayButtonBack()
 
     const dados = await fetchAluno(id)
     sessionStorage.setItem("curso_id", dados.curso_id);
@@ -224,6 +218,8 @@ async function criarInformacoesDoAluno(id) {
             porcentagem.style.color = "#3347B0"
         }
 
+        buttonVoltar()
+
         bar.appendChild(fill)
 
         performance.append(porcentagem, bar, nomeMateria)
@@ -235,39 +231,58 @@ async function criarInformacoesDoAluno(id) {
     main.append(infoAluno, studentStatistics)
 }
 
-function buttonExit() {
-    const exit = document.getElementById("exit")
-    exit.addEventListener('click', criarMain)
+function buttonSair() {
+
+    const backButton = document.createElement("div")
+    backButton.classList.add("exit-button")
+
+    const img = document.createElement("img")
+    img.src = "./src/img/Vector.svg"
+
+    const spanButton = document.createElement("span")
+    spanButton.textContent = "Sair"
+
+    backButton.append(img, spanButton)
+
+    header.appendChild(backButton)
+
+    backButton.addEventListener('click', function() {
+        try {
+            criarMain()
+        } catch (error) {
+            alert("não foi possível criar a página anterior, por favor recarregue a página")
+        }
+    })
+
+
 }
+
 function buttonVoltar() {
+
+    const backButton = document.createElement("div")
+    backButton.classList.add("back-button")
+
+    const img = document.createElement("img")
+    img.src = "./src/img/Vector.svg"
+
+    const spanButton = document.createElement("span")
+    spanButton.textContent = "Voltar"
+
+    backButton.append(img, spanButton)
+
+    header.appendChild(backButton)
 
     const cursoId = sessionStorage.getItem("curso_id");
 
-    const back = document.getElementById("back")
-    back.addEventListener('click', function() {
-        if (cursoId == 1)
+    backButton.addEventListener('click', function() {
+        if (cursoId === 1)
             criarAlunosDesenvolvimento()
-        else if(cursoId == 2)
+        else if(cursoId === 2)
             criarAlunosRede()
         else
             alert("não foi possível criar a página anterior, por favor recarregue a página")
     })
+
 }
 
-function displayButtonBack() {
-    const back = document.getElementById("back")
-    back.style.display = "flex"
-
-    const exit = document.getElementById("exit")
-    exit.style.display = "none"
-}
-function displayButtonExit(){
-    const back = document.getElementById("back")
-    back.style.display = "none"
-
-    const exit = document.getElementById("exit")
-    exit.style.display = "flex"
-}
-
-buttonVoltar()
 criarMain()

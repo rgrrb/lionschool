@@ -218,7 +218,6 @@ async function criarInformacoesDoAluno(id) {
         studentStatistics.appendChild(performance)
     })
    
-    main.style.gap = '200px'
     main.style.flexDirection = "row"
 
     main.append(infoAluno, studentStatistics)

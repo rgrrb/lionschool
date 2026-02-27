@@ -54,7 +54,13 @@ header {
     width: 124px;
     font-size: 36px;
 }
-
+.back-button {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    width: 124px;
+    font-size: 36px;
+}
 main {
     width: 100%;
     display: flex;
@@ -83,7 +89,6 @@ main {
     gap: 15px;
     height: 500px;
     width: 500px;
-    align-self: flex-start;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.096);
 }
 
@@ -133,8 +138,8 @@ main {
 }
 
 .students-list {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
     width: 100%;
     gap: 62px;
 }
@@ -228,7 +233,7 @@ footer {
     display: grid;
     align-items: center;
     grid-template-columns: 1fr 1fr 1fr;
-    height: 140px;
+    min-height: 140px;
     background-color: var(--cor-primaria);
     padding-inline: 96px;
 }

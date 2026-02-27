@@ -1,5 +1,7 @@
 'use strict'
 
+import { fetchAlunosByCourse, fetchAluno } from "./src/js/api.js";
+
 const main = document.getElementById("main")
 
 
@@ -11,7 +13,7 @@ function criarMain() {
     home.classList.add("home")
     home.append(criarLeftContent(), criarEstudante(), criarRightContent())
     main.appendChild(home)
-    
+    main.style.gap = '0px'
     main.style.flexDirection = "column"
 }
 function criarLeftContent() {
@@ -113,10 +115,13 @@ function criarCards(imagem, nome) {
 
 async function criarAlunosRede() {
 
-    const resposta = await fetch('https://lion-school-backend.onrender.com/alunos?curso_id=2');
-    const dados = await resposta.json();
+    const dados = await fetchAlunosByCourse(2)
 
     main.replaceChildren()
+    main.style.flexDirection = "column"
+    main.style.gap = '0px'
+
+    displayButtonExit()
 
     const titulo = document.createElement("h1")
     titulo.classList.add("titulo-curso")
@@ -125,6 +130,7 @@ async function criarAlunosRede() {
     const listagemAlunos = document.createElement("div")
     listagemAlunos.classList.add("students-list")
 
+    buttonExit()
 
     dados.forEach(aluno => {
         const cards = criarCards(aluno.foto, aluno.nome)
@@ -137,10 +143,13 @@ async function criarAlunosRede() {
 }
 async function criarAlunosDesenvolvimento() {
 
-    const resposta = await fetch('https://lion-school-backend.onrender.com/alunos?curso_id=1');
-    const dados = await resposta.json();
+    const dados = await fetchAlunosByCourse(1)
 
     main.replaceChildren()
+    main.style.flexDirection = "column"
+    main.style.gap = '0px'
+
+    displayButtonExit()
 
     const titulo = document.createElement("h1")
     titulo.classList.add("titulo-curso")
@@ -149,8 +158,7 @@ async function criarAlunosDesenvolvimento() {
     const listagemAlunos = document.createElement("div")
     listagemAlunos.classList.add("students-list")
 
-    const sair = document.getElementById("exit")
-    sair.addEventListener('click', criarMain)
+    buttonExit()
 
     dados.forEach(aluno => {
         const cards = criarCards(aluno.foto, aluno.nome)
@@ -163,10 +171,14 @@ async function criarAlunosDesenvolvimento() {
 }
 
 async function criarInformacoesDoAluno(id) {
-    const resposta = await fetch(`https://lion-school-backend.onrender.com/alunos/${id}`);
-    const dados = await resposta.json();
 
-    console.log(dados)
+    main.style.flexDirection = "row"
+
+    displayButtonBack()
+
+    const dados = await fetchAluno(id)
+    sessionStorage.setItem("curso_id", dados.curso_id);
+
     main.replaceChildren()
 
     const infoAluno = document.createElement("div")
@@ -188,9 +200,9 @@ async function criarInformacoesDoAluno(id) {
         const performance = document.createElement("div")
         performance.classList.add("performance")
 
-        const porcentagem = document.createElement("span")    
+        const porcentagem = document.createElement("span")
         porcentagem.textContent = info.valor
-    
+
         const nomeMateria = document.createElement("span")
         nomeMateria.textContent = info.categoria
 
@@ -201,13 +213,13 @@ async function criarInformacoesDoAluno(id) {
         fill.classList.add("fill")
         fill.style.height = `${info.valor}%`
 
-        if(info.valor <= 4){
+        if (info.valor <= 4) {
             fill.style.backgroundColor = "red"
             porcentagem.style.color = "red"
-        }else if (info.valor >= 5 && info.valor < 7){
+        } else if (info.valor >= 5 && info.valor < 7) {
             fill.style.backgroundColor = "yellow"
             porcentagem.style.color = "yellow"
-        }else{
+        } else {
             fill.style.backgroundColor = "#3347B0"
             porcentagem.style.color = "#3347B0"
         }
@@ -217,10 +229,45 @@ async function criarInformacoesDoAluno(id) {
         performance.append(porcentagem, bar, nomeMateria)
         studentStatistics.appendChild(performance)
     })
-   
-    main.style.flexDirection = "row"
+
+    main.style.gap = '200px'
 
     main.append(infoAluno, studentStatistics)
 }
 
+function buttonExit() {
+    const exit = document.getElementById("exit")
+    exit.addEventListener('click', criarMain)
+}
+function buttonVoltar() {
+
+    const cursoId = sessionStorage.getItem("curso_id");
+
+    const back = document.getElementById("back")
+    back.addEventListener('click', function() {
+        if (cursoId == 1)
+            criarAlunosDesenvolvimento()
+        else if(cursoId == 2)
+            criarAlunosRede()
+        else
+            alert("não foi possível criar a página anterior, por favor recarregue a página")
+    })
+}
+
+function displayButtonBack() {
+    const back = document.getElementById("back")
+    back.style.display = "flex"
+
+    const exit = document.getElementById("exit")
+    exit.style.display = "none"
+}
+function displayButtonExit(){
+    const back = document.getElementById("back")
+    back.style.display = "none"
+
+    const exit = document.getElementById("exit")
+    exit.style.display = "flex"
+}
+
+buttonVoltar()
 criarMain()

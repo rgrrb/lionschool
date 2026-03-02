@@ -236,7 +236,7 @@ function buttonSair() {
     const divNoHeader = document.querySelector('header .exit-button')
 
     if(divNoHeader){
-        backbutton.remove
+        divNoHeader.remove
     }
     
     const backButton = document.createElement("div")

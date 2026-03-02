@@ -233,6 +233,12 @@ async function criarInformacoesDoAluno(id) {
 
 function buttonSair() {
 
+    const divNoHeader = document.querySelector('header .exit-button')
+
+    if(divNoHeader){
+        backbutton.remove
+    }
+    
     const backButton = document.createElement("div")
     backButton.classList.add("exit-button")
 
@@ -253,7 +259,6 @@ function buttonSair() {
             alert("não foi possível criar a página anterior, por favor recarregue a página")
         }
     })
-
 
 }
 

@@ -233,7 +233,7 @@ async function criarInformacoesDoAluno(id) {
 
 function buttonSair() {
 
-    const divNoHeader = document.querySelector('.exit-button')
+    const divNoHeader = document.querySelector('exit-button')
 
     if(divNoHeader){
         divNoHeader.remove()
